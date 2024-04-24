@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>207beverage</title> <!-- 將 title 改為 "207beverage" -->
+    <style>
+        /* CSS 样式 */
+    </style>
+</head>
+<body>
+    <h1>207beverage</h1> <!-- 改為 "207beverage" -->
+    <div>
+        <label for="itemA">Item A (Price: $10)</label>
+        <button onclick="decrementQuantity('A')">-</button>
+        <span id="quantityA">0</span>
+        <button onclick="incrementQuantity('A')">+</button>
+    </div>
+    <div>
+        <label for="itemB">Item B (Price: $20)</label>
+        <button onclick="decrementQuantity('B')">-</button>
+        <span id="quantityB">0</span>
+        <button onclick="incrementQuantity('B')">+</button>
+    </div>
+    <div>
+        <label for="coupons">Coupons (Each coupon -$5)</label>
+        <button onclick="decrementQuantity('Coupons')">-</button>
+        <span id="quantityCoupons">0</span>
+        <button onclick="incrementQuantity('Coupons')">+</button>
+    </div>
+    <button onclick="submitOrder()">Submit Order</button>
+    <h2>Total: <span id="currentTotal">0</span></h2>
+
+    <button onclick="clearOrder()">Clear Order</button><br> <!-- 移動 Clear Order 按鈕至 Profit 上方 -->
+    
+    <div id="clearOrderConfirmation" style="display: none;">
+        <p>Are you sure you want to clear the order?</p>
+        <button onclick="cancelClearOrder()">Cancel</button>
+        <button onclick="confirmClearOrder()">Confirm</button>
+    </div>
+    
+    <h2>Order History</h2> <!-- 將 Order History 部分添加回來 -->
+    <table id="orderHistory">
+        <thead>
+            <tr>
+                <th>Item A</th>
+                <th>Item B</th>
+                <th>Coupons</th>
+                <th>Total</th>
+                <th>Completed</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Order history rows will be added here dynamically -->
+        </tbody>
+    </table>
+    
+    <h2>Profit: <span id="totalProfit">0</span></h2>
+
+    <script>
+        var totalProfit = 0;
+
+        function calculateTotal() {
+            var itemA = parseInt(document.getElementById('quantityA').innerText) || 0;
+            var itemB = parseInt(document.getElementById('quantityB').innerText) || 0;
+            var coupons = parseInt(document.getElementById('quantityCoupons').innerText) || 0;
+            var total = (itemA * 10) + (itemB * 20) - (coupons * 5);
+            document.getElementById('currentTotal').innerText = total;
+        }
+
+        function submitOrder() {
+            var itemA = parseInt(document.getElementById('quantityA').innerText) || 0;
+            var itemB = parseInt(document.getElementById('quantityB').innerText) || 0;
+            var coupons = parseInt(document.getElementById('quantityCoupons').innerText) || 0;
+            var total = (itemA * 10) + (itemB * 20) - (coupons * 5);
+
+            // Add order to history table
+            var table = document.getElementById('orderHistory').getElementsByTagName('tbody')[0];
+            var row = table.insertRow();
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            var cell3 = row.insertCell(2);
+            var cell4 = row.insertCell(3);
+            var cell5 = row.insertCell(4);
+            cell1.innerText = itemA;
+            cell2.innerText = itemB;
+            cell3.innerText = coupons;
+            cell4.innerText = total;
+            cell5.innerHTML = '<input type="checkbox">';
+
+            // Update profit
+            totalProfit += total;
+            document.getElementById('totalProfit').innerText = totalProfit;
+
+            // Update current total and reset inputs
+            document.getElementById('currentTotal').innerText = '0';
+            document.getElementById('quantityA').innerText = '0';
+            document.getElementById('quantityB').innerText = '0';
+            document.getElementById('quantityCoupons').innerText = '0';
+        }
+
+        function cancelClearOrder() {
+            document.getElementById('clearOrderConfirmation').style.display = 'none';
+        }
+
+        function confirmClearOrder() {
+            clearOrder();
+            document.getElementById('clearOrderConfirmation').style.display = 'none';
+
+            // Clear order history
+            var table = document.getElementById('orderHistory').getElementsByTagName('tbody')[0];
+            table.innerHTML = '';
+
+            // Reset profit
+            totalProfit = 0;
+            document.getElementById('totalProfit').innerText = '0';
+        }
+
+        function clearOrder() {
+            document.getElementById('clearOrderConfirmation').style.display = 'block';
+        }
+
+        function incrementQuantity(itemId) {
+            var quantityElement = document.getElementById('quantity' + itemId);
+            var quantity = parseInt(quantityElement.innerText) || 0;
+            quantityElement.innerText = quantity + 1;
+            calculateTotal();
+        }
+
+        function decrementQuantity(itemId) {
+            var quantityElement = document.getElementById('quantity' + itemId);
+            var quantity = parseInt(quantityElement.innerText) || 0;
+            if (quantity > 0) {
+                quantityElement.innerText = quantity - 1;
+                calculateTotal();
+            }
+        }
+    </script>
+</body>
+</html>
