@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSocket Client</title>
+</head>
+<body>
+    <h1>WebSocket Client</h1>
+
+    <script>
+        var socket = new WebSocket('ws://localhost:3000');
+
+        socket.onopen = function(event) {
+            console.log('Connected to WebSocket server');
+            // 發送一條消息給服務器
+            socket.send('Hello from client');
+        };
+
+        socket.onmessage = function(event) {
+            console.log('Received message from server:', event.data);
+        };
+    </script>
+</body>
+</html>
